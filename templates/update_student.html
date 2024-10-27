@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Student</title>
+</head>
+<body>
+    <h1>Update Student</h1>
+    <form action="/update_student/{{ student.id }}" method="post">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" value="{{ student.name }}" required><br><br>
+
+        <label for="math_score">Math Score:</label>
+        <input type="number" id="math_score" name="math_score" step="0.1" value="{{ student.math_score }}"><br><br>
+
+        <label for="art_score">Art Score:</label>
+        <input type="number" id="art_score" name="art_score" step="0.1" value="{{ student.art_score }}"><br><br>
+
+        <label for="history_score">History Score:</label>
+        <input type="number" id="history_score" name="history_score" step="0.1" value="{{ student.history_score }}"><br><br>
+
+        <label for="preferred_learning_style">Preferred Learning Style:</label>
+        <input type="text" id="preferred_learning_style" name="preferred_learning_style" value="{{ student.preferred_learning_style }}"><br><br>
+
+        <label for="creativity_level">Creativity Level:</label>
+        <input type="number" id="creativity_level" name="creativity_level" value="{{ student.creativity_level }}"><br><br>
+
+        <label for="critical_thinking_skill">Critical Thinking Skill:</label>
+        <input type="number" id="critical_thinking_skill" name="critical_thinking_skill" value="{{ student.critical_thinking_skill }}"><br><br>
+
+        <button type="submit">Update Student</button>
+    </form>
+    <br>
+    <a href="/students">View All Students</a>
+</body>
+</html>
+
