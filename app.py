@@ -162,5 +162,9 @@ def student_dashboard(student_id):
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()  # Create tables if they don't already exist
-    app.run(debug=True, port=5001)
+
+    # Get the port from the environment variable for Heroku, default to 5001 if not available
+    port = int(os.environ.get('PORT', 5001))
+    app.run(host='0.0.0.0', port=port)
+
 
