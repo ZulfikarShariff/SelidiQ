@@ -3,13 +3,12 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
-# Configuring the PostgreSQL database connection
-app.config['SQLALCHEMY_DATABASE_URI'] = (
-    'postgresql://u7kh03ggcqg96d:'
-    'p0bf845ecc0e5562763587f65edacb0679737a148c270fae6fb12323b4cc4e871'
-    '@c9pv5s2sq0i76o.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/d8c5jb85betbke'
-)
+import os
+
+# Configuring the PostgreSQL database connection dynamically using DATABASE_URL
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', '').replace("postgres://", "postgresql://", 1)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 
 db = SQLAlchemy(app)
 
@@ -28,6 +27,11 @@ class Subject(db.Model):
     name = db.Column(db.String(100), nullable=False)
     score = db.Column(db.Float, nullable=True)
     student_id = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=False)
+
+@app.route('/')
+@app.route('/index')
+def index():
+    return render_template('index.html')
 
 # Route to display the create student form
 @app.route('/create_student', methods=['GET', 'POST'])
@@ -137,6 +141,23 @@ def delete_subject(id):
     db.session.delete(subject)
     db.session.commit()
     return jsonify({'message': 'Subject deleted successfully'}), 200
+
+# Admin Dashboard Route
+@app.route('/admin_dashboard', methods=['GET'])
+def admin_dashboard():
+    return render_template('admin_dashboard.html')
+
+# Teacher Dashboard Route
+@app.route('/teacher_dashboard', methods=['GET'])
+def teacher_dashboard():
+    return render_template('teacher_dashboard.html')
+
+#Student Dashboard Route
+@app.route('/student_dashboard/<int:student_id>', methods=['GET'])
+def student_dashboard(student_id):
+    student = Student.query.get_or_404(student_id)
+    return render_template('student_dashboard.html', student=student)
+
 
 if __name__ == '__main__':
     with app.app_context():
