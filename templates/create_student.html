@@ -1,46 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Your Page Title</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
-    <!-- Link the JavaScript file -->
-    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Student</title>
-</head>
-<body>
-    <h1>Create a New Student</h1>
-    <form action="/create_student" method="POST">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required><br><br>
+{% extends 'base.html' %}
 
-        <label for="preferred_learning_style">Preferred Learning Style:</label>
-        <input type="text" id="preferred_learning_style" name="preferred_learning_style"><br><br>
+{% block title %}Create Student{% endblock %}
 
-        <label for="creativity_level">Creativity Level:</label>
-        <input type="number" id="creativity_level" name="creativity_level" step="1" min="0" max="10"><br><br>
+{% block content %}
+<h1>Create Student</h1>
+<form name="createStudentForm" onsubmit="return validateStudentForm()" action="/create_student" method="POST">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required><br>
 
-        <label for="critical_thinking_skill">Critical Thinking Skill:</label>
-        <input type="number" id="critical_thinking_skill" name="critical_thinking_skill" step="1" min="0" max="10"><br><br>
+    <label for="preferred_learning_style">Preferred Learning Style:</label>
+    <input type="text" id="preferred_learning_style" name="preferred_learning_style"><br>
 
-        <h3>Subject Scores</h3>
-        <label for="math_score">Math Score:</label>
-        <input type="number" id="math_score" name="math_score" step="1"><br><br>
+    <label for="creativity_level">Creativity Level:</label>
+    <input type="number" id="creativity_level" name="creativity_level" min="1" step="1"><br>
 
-        <label for="art_score">Art Score:</label>
-        <input type="number" id="art_score" name="art_score" step="1"><br><br>
+    <label for="critical_thinking_skill">Critical Thinking Skill:</label>
+    <input type="number" id="critical_thinking_skill" name="critical_thinking_skill" min="1" step="1"><br>
 
-        <label for="history_score">History Score:</label>
-        <input type="number" id="history_score" name="history_score" step="1"><br><br>
+    <div id="subjects">
+        <h3>Subjects</h3>
+        <div>
+            <label>Subject Name: Math</label>
+            <input type="number" name="math_score" min="0" step="1">
+        </div>
+        <div>
+            <label>Subject Name: Art</label>
+            <input type="number" name="art_score" min="0" step="1">
+        </div>
+        <div>
+            <label>Subject Name: History</label>
+            <input type="number" name="history_score" min="0" step="1">
+        </div>
+    </div>
 
-        <button type="submit">Create Student</button>
-    </form>
-
-    <a href="/students">Back to Student List</a>
-    <!-- Button to add more subjects using JavaScript -->
-    <button onclick="addSubjectField()">Add More Subjects</button>
-</body>
-</html>
+    <button type="button" onclick="addSubjectField()">Add More Subjects</button><br><br>
+    
+    <input type="submit" value="Submit">
+</form>
+{% endblock %}
 

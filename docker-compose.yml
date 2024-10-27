@@ -1,0 +1,21 @@
+services:
+  web:
+    build: .
+    ports:
+      - "5001:5001"
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+
+  db:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: u7kh03ggcqg96d
+      POSTGRES_PASSWORD: p0bf845ecc0e5562763587f65edacb0679737a148c270fae6fb12323b4cc4e871
+      POSTGRES_DB: d8c5jb85betbke
+    ports:
+      - "5432:5432"
+

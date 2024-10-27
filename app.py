@@ -1,14 +1,23 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
-
-app = Flask(__name__)
+from dotenv import load_dotenv  # Importing load_dotenv to load environment variables
 
 import os
+
+# Load environment variables from the .env file
+load_dotenv()  # Load the .env file to get environment variables
+
+app = Flask(__name__)
 
 # Configuring the PostgreSQL database connection dynamically using DATABASE_URL
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', '').replace("postgres://", "postgresql://", 1)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+# Set the secret key for the application using SECRET_KEY from environment variables
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+
+# Print statement for debugging to verify that the database URL is correctly loaded
+print("Database URL:", os.getenv('DATABASE_URL'))
 
 db = SQLAlchemy(app)
 
@@ -87,8 +96,8 @@ def update_student(id):
         data = request.form
         student.name = data.get('name', student.name)
         student.preferred_learning_style = data.get('preferred_learning_style', student.preferred_learning_style)
-        student.creativity_level = data.get('creativity_level', student.creativity_level)
-        student.critical_thinking_skill = data.get('critical_thinking_skill', student.critical_thinking_skill)
+        student.creativity_level = int(data.get('creativity_level', student.creativity_level))
+        student.critical_thinking_skill = int(data.get('critical_thinking_skill', student.critical_thinking_skill))
         db.session.commit()
         return redirect(url_for('view_students'))
     
@@ -152,12 +161,11 @@ def admin_dashboard():
 def teacher_dashboard():
     return render_template('teacher_dashboard.html')
 
-#Student Dashboard Route
+# Student Dashboard Route
 @app.route('/student_dashboard/<int:student_id>', methods=['GET'])
 def student_dashboard(student_id):
     student = Student.query.get_or_404(student_id)
     return render_template('student_dashboard.html', student=student)
-
 
 if __name__ == '__main__':
     with app.app_context():
@@ -166,5 +174,4 @@ if __name__ == '__main__':
     # Get the port from the environment variable for Heroku, default to 5001 if not available
     port = int(os.environ.get('PORT', 5001))
     app.run(host='0.0.0.0', port=port)
-
 

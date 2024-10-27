@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Admin Dashboard</h1>
+
+<div class="admin-section">
+    <h2>Manage Students</h2>
+    <ul>
+        <li><a href="/students">View All Students</a></li>
+        <li><a href="/create_student">Add a New Student</a></li>
+    </ul>
+</div>
+
+<div class="admin-section">
+    <h2>Manage Teachers</h2>
+    <ul>
+        <li><a href="/teachers">View All Teachers</a></li>
+        <li><a href="/create_teacher">Add a New Teacher</a></li>
+    </ul>
+</div>
+
+<div class="admin-section">
+    <h2>Manage Classes</h2>
+    <ul>
+        <li><a href="/create_class">Create New Class</a></li>
+        <li><a href="/view_classes">View All Classes</a></li>
+    </ul>
+</div>
+
+<div class="admin-section">
+    <h2>Timetable and Allocation</h2>
+    <ul>
+        <li><a href="/generate_timetable">Generate Timetable (AI-Based)</a></li>
+        <li><a href="/view_timetable">View Timetables</a></li>
+    </ul>
+</div>
+
+<div class="admin-section">
+    <h2>CRT Management</h2>
+    <ul>
+        <li><a href="/crt_allocation">Manage Casual Relief Teachers</a></li>
+        <li><a href="/crt_predictions">Predict Attendance & CRT Needs</a></li>
+    </ul>
+</div>
+
+<div class="admin-section">
+    <h2>VCE/HSC Management</h2>
+    <ul>
+        <li><a href="/vce_hsc_tracking">Track Student Outcomes</a></li>
+        <li><a href="/ai_recommendations">AI Recommendations for Learning Pathways</a></li>
+    </ul>
+</div>
+
+{% endblock %}
+

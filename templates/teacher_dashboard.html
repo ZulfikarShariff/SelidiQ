@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Teacher Dashboard</h1>
+
+<div class="teacher-section">
+    <h2>Manage Classes</h2>
+    <ul>
+        <li><a href="/view_my_classes">View My Classes</a></li>
+        <li><a href="/create_class">Create New Class</a></li>
+    </ul>
+</div>
+
+<div class="teacher-section">
+    <h2>Manage Students</h2>
+    <ul>
+        <li><a href="/students">View All Students</a></li>
+        <li><a href="/student_progress">Monitor Student Progress</a></li>
+    </ul>
+</div>
+
+<div class="teacher-section">
+    <h2>Lesson Plans & Resources</h2>
+    <ul>
+        <li><a href="/create_lesson_plan">Create a New Lesson Plan</a></li>
+        <li><a href="/ai_lesson_generator">AI-Generated Lesson Plans</a></li>
+        <li><a href="/view_lesson_plans">View All Lesson Plans</a></li>
+    </ul>
+</div>
+
+<div class="teacher-section">
+    <h2>Student Grouping & Collaboration</h2>
+    <ul>
+        <li><a href="/group_students">Group Students for Collaboration</a></li>
+        <li><a href="/ai_grouping_suggestions">AI Grouping Suggestions</a></li>
+    </ul>
+</div>
+
+<div class="teacher-section">
+    <h2>Assessments & Reports</h2>
+    <ul>
+        <li><a href="/create_assessment">Create an Assessment</a></li>
+        <li><a href="/view_reports">View Class Reports</a></li>
+    </ul>
+</div>
+
+{% endblock %}
+
