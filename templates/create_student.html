@@ -5,8 +5,14 @@
 {% block content %}
 <h1>Create Student</h1>
 <form name="createStudentForm" onsubmit="return validateStudentForm()" action="/create_student" method="POST">
-    <label for="name">Name:</label>
-    <input type="text" id="name" name="name" required><br>
+    <label for="first_name">First Name:</label>
+    <input type="text" id="first_name" name="first_name" required><br>
+
+    <label for="middle_names">Middle Names:</label>
+    <input type="text" id="middle_names" name="middle_names"><br>
+
+    <label for="last_name">Last Name:</label>
+    <input type="text" id="last_name" name="last_name" required><br>
 
     <label for="preferred_learning_style">Preferred Learning Style:</label>
     <input type="text" id="preferred_learning_style" name="preferred_learning_style"><br>
