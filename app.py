@@ -1,9 +1,8 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from dotenv import load_dotenv  # Importing load_dotenv to load environment variables
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import check_password_hash  # Import check_password_hash for password verification
 import os
 
 # Load environment variables from the .env file
@@ -24,21 +23,6 @@ print("Database URL:", os.getenv('DATABASE_URL'))
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-# Set up LoginManager
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = 'login'
-
-# Defining the User model
-class User(UserMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(100), unique=True, nullable=False)
-    password = db.Column(db.String(255), nullable=False)
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
-
 # Defining the Student model
 class Student(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -49,6 +33,7 @@ class Student(db.Model):
     creativity_level = db.Column(db.Integer, nullable=True)
     critical_thinking_skill = db.Column(db.Integer, nullable=True)
     subjects = db.relationship('Subject', backref='student', lazy=True)
+    progress = db.relationship('StudentProgress', backref='student', lazy=True)
 
 # Defining the Subject model
 class Subject(db.Model):
@@ -57,10 +42,36 @@ class Subject(db.Model):
     score = db.Column(db.Float, nullable=True)
     student_id = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=False)
 
+# Defining the Lesson model
+class Lesson(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(255), nullable=False)  # Title of the lesson
+    subject = db.Column(db.String(100), nullable=False)  # New field for Subject
+    content_type = db.Column(db.String(50), nullable=False)  # New field for Content Type
+    complexity_level = db.Column(db.String(50), nullable=False)  # New field for Complexity Level
+    engagement_level = db.Column(db.String(50), nullable=True)  # New field for Engagement Level
+    year_level = db.Column(db.Integer, nullable=False)  # Year level (7-12)
+    engagement_activity = db.Column(db.Text, nullable=False)
+    learning_intention = db.Column(db.Text, nullable=False)
+    success_criteria = db.Column(db.Text, nullable=False)
+    vocabulary = db.Column(db.Text, nullable=True)
+    explicit_teaching = db.Column(db.Text, nullable=False)
+    examples = db.Column(db.Text, nullable=True)
+    tasks = db.Column(db.Text, nullable=False)  # Tasks for students (research, discussions, etc.)
+    reflection = db.Column(db.Text, nullable=True)
+
+# Defining the StudentProgress model
+class StudentProgress(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    student_id = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=False)
+    lesson_id = db.Column(db.Integer, db.ForeignKey('lesson.id'), nullable=False)
+    engagement_rating = db.Column(db.Integer, nullable=True)  # Rating of engagement (e.g., 1-5)
+    reflection_feedback = db.Column(db.Text, nullable=True)  # Student's reflection feedback
+    task_completion_status = db.Column(db.String(50), nullable=True)  # Status of tasks (e.g., Completed, In Progress)
+
 # Route for index page
 @app.route('/')
 @app.route('/index')
-@login_required
 def index():
     return render_template('index.html')
 
@@ -87,17 +98,41 @@ def login():
 
     return render_template('login.html')
 
-# Route to Logout
-@app.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    flash('You have been logged out.', 'info')
-    return redirect(url_for('login'))
+# Route to create a new lesson
+@app.route('/upload_lesson', methods=['GET', 'POST'])
+def upload_lesson():
+    if request.method == 'POST':
+        data = request.form
+        new_lesson = Lesson(
+            title=data['title'],
+            subject=data['subject'],  # New field
+            content_type=data['content_type'],  # New field
+            complexity_level=data['complexity_level'],  # New field
+            engagement_level=data.get('engagement_level'),  # New field
+            year_level=int(data['year_level']),
+            engagement_activity=data['engagement_activity'],
+            learning_intention=data['learning_intention'],
+            success_criteria=data['success_criteria'],
+            vocabulary=data.get('vocabulary'),
+            explicit_teaching=data['explicit_teaching'],
+            examples=data.get('examples'),
+            tasks=data['tasks'],
+            reflection=data.get('reflection')
+        )
+        db.session.add(new_lesson)
+        db.session.commit()
+        flash('Lesson uploaded successfully.', 'success')
+        return redirect(url_for('lessons'))
+    return render_template('upload_lesson.html')
+
+# Route to view all lessons
+@app.route('/lessons', methods=['GET'])
+def lessons():
+    lessons = Lesson.query.all()
+    return render_template('lessons.html', lessons=lessons)
 
 # Route to display the create student form
 @app.route('/create_student', methods=['GET', 'POST'])
-@login_required
 def create_student():
     if request.method == 'POST':
         data = request.form
@@ -140,14 +175,12 @@ def create_student():
 
 # Route to display all student profiles
 @app.route('/students', methods=['GET'])
-@login_required
 def view_students():
     students = Student.query.all()
     return render_template('view_students.html', students=students)
 
 # Route to display and update a student profile
 @app.route('/update_student/<int:id>', methods=['GET', 'POST'])
-@login_required
 def update_student(id):
     student = Student.query.get_or_404(id)
     if request.method == 'POST':
@@ -165,7 +198,6 @@ def update_student(id):
 
 # Route to delete a student profile
 @app.route('/delete_student/<int:id>', methods=['POST'])
-@login_required
 def delete_student(id):
     student = Student.query.get_or_404(id)
     db.session.delete(student)
@@ -174,7 +206,6 @@ def delete_student(id):
 
 # Route to add a subject to a student profile
 @app.route('/add_subject/<int:student_id>', methods=['POST'])
-@login_required
 def add_subject(student_id):
     student = Student.query.get_or_404(student_id)
     data = request.get_json()
@@ -194,7 +225,6 @@ def add_subject(student_id):
 
 # Route to update a subject
 @app.route('/update_subject/<int:id>', methods=['PUT'])
-@login_required
 def update_subject(id):
     subject = Subject.query.get_or_404(id)
     data = request.get_json()
@@ -208,28 +238,59 @@ def update_subject(id):
 
 # Route to delete a subject
 @app.route('/delete_subject/<int:id>', methods=['DELETE'])
-@login_required
 def delete_subject(id):
     subject = Subject.query.get_or_404(id)
     db.session.delete(subject)
     db.session.commit()
     return jsonify({'message': 'Subject deleted successfully'}), 200
 
+# Route to edit a lesson
+@app.route('/edit_lesson/<int:lesson_id>', methods=['GET', 'POST'])
+def edit_lesson(lesson_id):
+    lesson = Lesson.query.get_or_404(lesson_id)
+    if request.method == 'POST':
+        # Update lesson details based on form input
+        lesson.title = request.form['title']
+        lesson.subject = request.form['subject']  # New field
+        lesson.content_type = request.form['content_type']  # New field
+        lesson.complexity_level = request.form['complexity_level']  # New field
+        lesson.engagement_level = request.form.get('engagement_level')  # New field
+        lesson.engagement_activity = request.form['engagement_activity']
+        lesson.learning_intention = request.form['learning_intention']
+        lesson.success_criteria = request.form['success_criteria']
+        lesson.vocabulary = request.form.get('vocabulary')
+        lesson.explicit_teaching = request.form['explicit_teaching']
+        lesson.examples = request.form.get('examples')
+        lesson.tasks = request.form['tasks']
+        lesson.reflection = request.form.get('reflection')
+
+        db.session.commit()
+        flash('Lesson updated successfully', 'success')
+        return redirect(url_for('lessons'))
+
+    return render_template('edit_lesson.html', lesson=lesson)
+
+# Route to delete a lesson
+@app.route('/delete_lesson/<int:lesson_id>', methods=['POST'])
+def delete_lesson(lesson_id):
+    lesson = Lesson.query.get_or_404(lesson_id)
+    db.session.delete(lesson)
+    db.session.commit()
+    flash('Lesson deleted successfully', 'success')
+    return redirect(url_for('lessons'))
+
 # Admin Dashboard Route
 @app.route('/admin_dashboard', methods=['GET'])
-@login_required
 def admin_dashboard():
     return render_template('admin_dashboard.html')
 
 # Teacher Dashboard Route
 @app.route('/teacher_dashboard', methods=['GET'])
-@login_required
 def teacher_dashboard():
     return render_template('teacher_dashboard.html')
 
 # Student Dashboard Route
 @app.route('/student_dashboard/<int:student_id>', methods=['GET'])
-@login_required
 def student_dashboard(student_id):
     student = Student.query.get_or_404(student_id)
     return render_template('student_dashboard.html', student=student)
