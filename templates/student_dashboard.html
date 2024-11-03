@@ -6,7 +6,8 @@
     <!-- Student Information Summary -->
     <div class="student-info">
         <img src="{{ url_for('static', filename='images/student_profile.png') }}" alt="Student Profile Picture" class="student-profile">
-        <h2>{{ student.name }}</h2>
+        <h2>{{ student.first_name }} {{ student.middle_name if student.middle_name }} {{ student.last_name }}
+</h2>
         <p>Grade: {{ student.grade }}</p>
         <p>Current GPA: {{ student.gpa }}</p>
     </div>

@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Create a Lesson Plan</h1>
+<form method="POST" action="{{ url_for('create_lesson_plan') }}">
+    <label for="lesson_title">Lesson Title:</label>
+    <input type="text" id="lesson_title" name="title" required>
+
+    <label for="year_level">Year Level:</label>
+    <input type="number" id="year_level" name="year_level" required>
+
+    <label for="subject">Subject:</label>
+    <input type="text" id="subject" name="subject" required>
+
+    <label for="content">Content:</label>
+    <textarea id="content" name="content" rows="20" cols="80" required></textarea>
+
+    <!-- Additional fields with numerical options -->
+    <label for="critical_thinking_goal">Critical Thinking Goal (1-5):</label>
+    <select id="critical_thinking_goal" name="critical_thinking_goal">
+        <option value="1">1 - Very Low</option>
+        <option value="2">2 - Low</option>
+        <option value="3">3 - Medium</option>
+        <option value="4">4 - High</option>
+        <option value="5">5 - Very High</option>
+    </select>
+
+    <label for="creativity_goal">Creativity Goal (1-5):</label>
+    <select id="creativity_goal" name="creativity_goal">
+        <option value="1">1 - Very Low</option>
+        <option value="2">2 - Low</option>
+        <option value="3">3 - Medium</option>
+        <option value="4">4 - High</option>
+        <option value="5">5 - Very High</option>
+    </select>
+
+    <label for="complexity_level">Complexity Level (1-5):</label>
+    <select id="complexity_level" name="complexity_level">
+        <option value="1">1 - Very Easy</option>
+        <option value="2">2 - Easy</option>
+        <option value="3">3 - Medium</option>
+        <option value="4">4 - Hard</option>
+        <option value="5">5 - Very Hard</option>
+    </select>
+
+    <label for="engagement_level">Engagement Level (1-5):</label>
+    <select id="engagement_level" name="engagement_level">
+        <option value="1">1 - Very Low</option>
+        <option value="2">2 - Low</option>
+        <option value="3">3 - Medium</option>
+        <option value="4">4 - High</option>
+        <option value="5">5 - Very High</option>
+    </select>
+
+    <button type="submit">Create Lesson Plan</button>
+</form>
+{% endblock %}
+

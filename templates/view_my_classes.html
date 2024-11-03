@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>My Classes</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Class ID</th>
+            <th>Class Name</th>
+            <th>Year Level</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for class in classes %}
+        <tr>
+            <td>{{ class.id }}</td>
+            <td>{{ class.name }}</td>
+            <td>{{ class.year_level }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+

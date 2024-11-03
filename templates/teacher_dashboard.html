@@ -3,18 +3,30 @@
 {% block content %}
 <h1>Teacher Dashboard</h1>
 
+<!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
 <div class="teacher-section">
     <h2>Manage Classes</h2>
     <ul>
         <li><a href="/view_my_classes">View My Classes</a></li>
-        <li><a href="/create_class">Create New Class</a></li>
     </ul>
 </div>
 
 <div class="teacher-section">
     <h2>Manage Students</h2>
     <ul>
-        <li><a href="/students">View All Students</a></li>
+        <li><a href="/view_students">View All Students</a></li>
         <li><a href="/student_progress">Monitor Student Progress</a></li>
     </ul>
 </div>
@@ -22,9 +34,15 @@
 <div class="teacher-section">
     <h2>Lesson Plans & Resources</h2>
     <ul>
-        <li><a href="/create_lesson_plan">Create a New Lesson Plan</a></li>
-        <li><a href="/ai_lesson_generator">AI-Generated Lesson Plans</a></li>
-        <li><a href="/view_lesson_plans">View All Lesson Plans</a></li>
+        <!-- Create and View Teacher-Specific Lesson Plans -->
+        <li><a href="{{ url_for('create_lesson_plan') }}">Create a New Lesson Plan for My Class</a></li>
+        <li><a href="{{ url_for('view_teacher_lessons') }}">View My Created Lesson Plans</a></li>
+
+        <!-- AI-Generated Lesson Plans -->
+        <li><a href="{{ url_for('ai_lesson_generator') }}">Generate Lesson Plans with AI</a></li>
+
+        <!-- View Domain-Level Lessons Assigned -->
+        <li><a href="{{ url_for('view_domain_lessons') }}">View Domain-Level Lessons</a></li>
     </ul>
 </div>
 

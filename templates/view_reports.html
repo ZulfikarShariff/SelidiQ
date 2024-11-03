@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Class Reports</h1>
+
+<div>
+    <h2>Classes</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Class ID</th>
+                <th>Class Name</th>
+                <th>Year Level</th>
+                <th>Subject</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for class in classes %}
+            <tr>
+                <td>{{ class.id }}</td>
+                <td>{{ class.name }}</td>
+                <td>{{ class.year_level }}</td>
+                <td>{{ class.subject }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div>
+    <h2>Student Progress</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Student ID</th>
+                <th>Lesson ID</th>
+                <th>Engagement Rating</th>
+                <th>Task Completion Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for progress in student_progress %}
+            <tr>
+                <td>{{ progress.student_id }}</td>
+                <td>{{ progress.lesson_id }}</td>
+                <td>{{ progress.engagement_rating }}</td>
+                <td>{{ progress.task_completion_status }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+

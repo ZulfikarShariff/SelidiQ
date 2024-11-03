@@ -25,17 +25,56 @@
 
     <div id="subjects">
         <h3>Subjects</h3>
-        {% for subject in student.subjects %}
-        <div class="subject-input">
-            <label>Subject Name: {{ subject.name }}</label>
-            <input type="number" name="subject_score_{{ subject.id }}" value="{{ subject.score }}" min="0" max="100" step="1">
-        </div>
-        {% endfor %}
+        {% if student.subjects %}
+            {% for subject in student.subjects %}
+            <div class="subject-input">
+                <label>Subject Name: {{ subject.name }}</label>
+                <input type="hidden" name="subject_name_{{ subject.id }}" value="{{ subject.name }}">
+                <input type="number" name="subject_score_{{ subject.id }}" value="{{ subject.score }}" min="0" max="100" step="1">
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No subjects available.</p>
+        {% endif %}
     </div>
 
     <button type="button" onclick="addSubjectField()">Add More Subjects</button><br><br>
 
     <input type="submit" value="Update">
 </form>
+
+<script>
+    function addSubjectField() {
+        // Create a container for the new subject fields
+        const subjectsDiv = document.getElementById('subjects');
+        
+        const subjectInputDiv = document.createElement('div');
+        subjectInputDiv.className = 'subject-input';
+        
+        // Create an input for the subject name
+        const subjectNameLabel = document.createElement('label');
+        subjectNameLabel.innerHTML = 'Subject Name:';
+        subjectInputDiv.appendChild(subjectNameLabel);
+        
+        const subjectNameInput = document.createElement('input');
+        subjectNameInput.type = 'text';
+        subjectNameInput.name = 'new_subject_name';
+        subjectNameInput.required = true;
+        subjectInputDiv.appendChild(subjectNameInput);
+
+        // Create an input for the subject score
+        const subjectScoreInput = document.createElement('input');
+        subjectScoreInput.type = 'number';
+        subjectScoreInput.name = 'new_subject_score';
+        subjectScoreInput.min = '0';
+        subjectScoreInput.max = '100';
+        subjectScoreInput.step = '1';
+        subjectScoreInput.required = true;
+        subjectInputDiv.appendChild(subjectScoreInput);
+        
+        // Add the new subject input fields to the subjects div
+        subjectsDiv.appendChild(subjectInputDiv);
+    }
+</script>
 {% endblock %}
 

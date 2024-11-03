@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>AI Grouping Suggestions</h1>
+<ul>
+    {% for suggestion in suggestions %}
+    <li>Group: {{ suggestion.group_name }} - Students: {{ suggestion.students }}</li>
+    {% endfor %}
+</ul>
+{% endblock %}
+

@@ -3,11 +3,33 @@
 {% block content %}
 <h1>Admin Dashboard</h1>
 
+<!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+<!-- Retained Original Functionalities -->
+<div class="admin-section">
+    <h2>Manage Classes</h2>
+    <ul>
+        <li><a href="/create_class">Create New Class</a></li>
+        <li><a href="/view_classes">View All Classes</a></li>
+    </ul>
+</div>
+
 <div class="admin-section">
     <h2>Manage Students</h2>
     <ul>
-        <li><a href="/students">View All Students</a></li>
-        <li><a href="/create_student">Add a New Student</a></li>
+        <li><a href="{{ url_for('view_students') }}">View All Students</a></li>
+        <li><a href="{{ url_for('create_student') }}">Add a New Student</a></li>
     </ul>
 </div>
 
@@ -49,6 +71,131 @@
         <li><a href="/vce_hsc_tracking">Track Student Outcomes</a></li>
         <li><a href="/ai_recommendations">AI Recommendations for Learning Pathways</a></li>
     </ul>
+</div>
+
+# If logged in as Domain Head
+{% if current_user.role == 'Domain Head' %}
+    <div class="admin-section">
+        <h2>Domain Management - Lessons</h2>
+
+        <!-- Add New Domain-Level Lesson -->
+        <div class="section">
+            <h3>Add New Domain-Level Lesson</h3>
+            <a href="{{ url_for('add_domain_lesson') }}" class="btn btn-primary">Create New Domain-Level Lesson</a>
+        </div>
+
+        <!-- View All Domain-Level Lessons -->
+        <div class="section">
+            <h3>View Domain-Level Lessons</h3>
+            <a href="{{ url_for('view_domain_lessons') }}" class="btn btn-secondary">View All Domain-Level Lessons</a>
+        </div>
+    </div>
+{% endif %}
+
+<!-- Additional Functionalities -->
+
+<div class="admin-section">
+    <h2>Subject Management</h2>
+
+    <!-- Add New Subject Globally -->
+    <div class="section">
+        <h3>Add New Subject</h3>
+        <form method="POST" action="{{ url_for('create_subject') }}">
+            <label for="subject_name">Subject Name:</label>
+            <input type="text" id="subject_name" name="subject_name" required>
+            <button type="submit">Add Subject</button>
+        </form>
+    </div>
+
+    <!-- Assign Subjects to Individual Students -->
+    <div class="section">
+        <h3>Assign Subjects to Individual Students</h3>
+        {% for student in students %}
+            <div class="student-assignment">
+                <h4>Assign Subject to {{ student.first_name }} {{ student.last_name }}</h4>
+                <form method="POST" action="{{ url_for('assign_subject', student_id=student.id) }}">
+                    <label for="subject_id_{{ student.id }}">Select Subject:</label>
+                    <select id="subject_id_{{ student.id }}" name="subject_id" required>
+                        {% for subject in subjects %}
+                            <option value="{{ subject.id }}">{{ subject.name }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <label for="initial_score_{{ student.id }}">Initial Score (optional):</label>
+                    <input type="number" id="initial_score_{{ student.id }}" name="score">
+
+                    <button type="submit">Assign Subject</button>
+                </form>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Assign Subjects to Class of Students -->
+    <div class="section">
+        <h3>Assign Subjects to a Class of Students</h3>
+        <form method="POST" action="{{ url_for('assign_subject_to_class') }}">
+            <label for="subject_id_class">Select Subject:</label>
+            <select id="subject_id_class" name="subject_id" required>
+                {% for subject in subjects %}
+                    <option value="{{ subject.id }}">{{ subject.name }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="student_ids">Select Students:</label>
+            <select id="student_ids" name="student_ids" multiple required>
+                {% for student in students %}
+                    <option value="{{ student.id }}">{{ student.first_name }} {{ student.last_name }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="score_class">Initial Score (optional):</label>
+            <input type="number" id="score_class" name="score">
+
+            <button type="submit">Assign Subject to Class</button>
+        </form>
+    </div>
+</div>
+
+<div class="admin-section">
+    <h2>Student and Subject Overview</h2>
+    
+    <!-- View All Students and Their Subjects -->
+    <div class="section">
+        <h3>All Students and Their Subjects</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Subjects</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                    <tr>
+                        <td>{{ student.first_name }} {{ student.last_name }}</td>
+                        <td>
+                            <ul>
+                                {% for subject in student.subjects %}
+                                    <li>
+                                        {{ subject.name }}
+                                        <!-- Update Subject Score -->
+                                        <button onclick="location.href='{{ url_for('update_assigned_subject_score', student_id=student.id, subject_id=subject.id) }}'">Update Score</button>
+                                        <!-- Delete Assigned Subject -->
+                                        <button onclick="location.href='{{ url_for('delete_assigned_subject', student_id=student.id, subject_id=subject.id) }}'">Delete</button>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                        <!-- View Student Details -->
+                        <td>
+                            <button onclick="location.href='{{ url_for('view_student', student_id=student.id) }}'">View Details</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 
 {% endblock %}

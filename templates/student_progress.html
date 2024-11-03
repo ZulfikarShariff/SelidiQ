@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Student Progress</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Student ID</th>
+            <th>Name</th>
+            <th>Subjects</th>
+            <th>Progress</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for student in students %}
+        <tr>
+            <td>{{ student.id }}</td>
+            <td>{{ student.first_name }} {{ student.last_name }}</td>
+            <td>
+                <ul>
+                    {% for subject in student.subjects %}
+                    <li>{{ subject.name }}: {{ subject.score }}</li>
+                    {% endfor %}
+                </ul>
+            </td>
+            <td>{{ student.progress }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
