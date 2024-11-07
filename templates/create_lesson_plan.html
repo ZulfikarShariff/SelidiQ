@@ -2,57 +2,132 @@
 
 {% block content %}
 <h1>Create a Lesson Plan</h1>
-<form method="POST" action="{{ url_for('create_lesson_plan') }}">
-    <label for="lesson_title">Lesson Title:</label>
-    <input type="text" id="lesson_title" name="title" required>
+<form method="POST" action="{{ url_for('main.create_lesson_plan') }}" class="lesson-plan-form">
+    <div class="form-section">
+        <!-- Title, Year Level, Subject -->
+        <div class="form-group full-width">
+            <label for="lesson_title">Lesson Title:</label>
+            <input type="text" id="lesson_title" name="title" required>
+        </div>
 
-    <label for="year_level">Year Level:</label>
-    <input type="number" id="year_level" name="year_level" required>
+        <div class="form-row">
+            <div class="form-group half-width">
+                <label for="year_level">Year Level:</label>
+                <input type="number" id="year_level" name="year_level" required>
+            </div>
 
-    <label for="subject">Subject:</label>
-    <input type="text" id="subject" name="subject" required>
+            <div class="form-group half-width">
+                <label for="subject">Subject:</label>
+                <input type="text" id="subject" name="subject" required>
+            </div>
+        </div>
 
-    <label for="content">Content:</label>
-    <textarea id="content" name="content" rows="20" cols="80" required></textarea>
+        <div class="form-group full-width">
+            <label for="content_type">Content Type:</label>
+            <input type="text" id="content_type" name="content_type" required>
+        </div>
 
-    <!-- Additional fields with numerical options -->
-    <label for="critical_thinking_goal">Critical Thinking Goal (1-5):</label>
-    <select id="critical_thinking_goal" name="critical_thinking_goal">
-        <option value="1">1 - Very Low</option>
-        <option value="2">2 - Low</option>
-        <option value="3">3 - Medium</option>
-        <option value="4">4 - High</option>
-        <option value="5">5 - Very High</option>
-    </select>
+        <!-- Learning Intention and Success Criteria -->
+        <div class="form-group full-width">
+            <label for="learning_intention">Learning Intention:</label>
+            <textarea id="learning_intention" name="learning_intention" rows="3" required></textarea>
+        </div>
 
-    <label for="creativity_goal">Creativity Goal (1-5):</label>
-    <select id="creativity_goal" name="creativity_goal">
-        <option value="1">1 - Very Low</option>
-        <option value="2">2 - Low</option>
-        <option value="3">3 - Medium</option>
-        <option value="4">4 - High</option>
-        <option value="5">5 - Very High</option>
-    </select>
+        <div class="form-group full-width">
+            <label for="success_criteria">Success Criteria:</label>
+            <textarea id="success_criteria" name="success_criteria" rows="3" required></textarea>
+        </div>
 
-    <label for="complexity_level">Complexity Level (1-5):</label>
-    <select id="complexity_level" name="complexity_level">
-        <option value="1">1 - Very Easy</option>
-        <option value="2">2 - Easy</option>
-        <option value="3">3 - Medium</option>
-        <option value="4">4 - Hard</option>
-        <option value="5">5 - Very Hard</option>
-    </select>
+        <div class="form-group full-width">
+            <label for="explicit_teaching">Explicit Teaching:</label>
+            <textarea id="explicit_teaching" name="explicit_teaching" rows="3" required></textarea>
+        </div>
 
-    <label for="engagement_level">Engagement Level (1-5):</label>
-    <select id="engagement_level" name="engagement_level">
-        <option value="1">1 - Very Low</option>
-        <option value="2">2 - Low</option>
-        <option value="3">3 - Medium</option>
-        <option value="4">4 - High</option>
-        <option value="5">5 - Very High</option>
-    </select>
+        <div class="form-group full-width">
+            <label for="tasks">Tasks:</label>
+            <textarea id="tasks" name="tasks" rows="4" required></textarea>
+        </div>
 
-    <button type="submit">Create Lesson Plan</button>
+        <div class="form-group full-width">
+            <label for="content">Content:</label>
+            <textarea id="content" name="content" rows="20" cols="80" required></textarea>
+        </div>
+    </div>
+
+    <!-- Optional Fields Section -->
+    <div class="form-section">
+        <h3>Optional Details</h3>
+
+        <div class="form-group full-width">
+            <label for="vocabulary">Vocabulary:</label>
+            <textarea id="vocabulary" name="vocabulary" rows="3"></textarea>
+        </div>
+
+        <div class="form-group full-width">
+            <label for="engagement_activity">Engagement Activity:</label>
+            <textarea id="engagement_activity" name="engagement_activity" rows="3"></textarea>
+        </div>
+
+        <div class="form-group full-width">
+            <label for="reflection">Reflection:</label>
+            <textarea id="reflection" name="reflection" rows="3"></textarea>
+        </div>
+    </div>
+
+    <!-- Fields with Numerical Options Section -->
+    <div class="form-section">
+        <h3>Learning Goals</h3>
+
+        <div class="form-row">
+            <div class="form-group small-width">
+                <label for="complexity_level">Complexity Level (1-5):</label>
+                <select id="complexity_level" name="complexity_level" required>
+                    <option value="1">1 - Very Easy</option>
+                    <option value="2">2 - Easy</option>
+                    <option value="3">3 - Medium</option>
+                    <option value="4">4 - Hard</option>
+                    <option value="5">5 - Very Hard</option>
+                </select>
+            </div>
+
+            <div class="form-group small-width">
+                <label for="engagement_level">Engagement Level (1-5):</label>
+                <select id="engagement_level" name="engagement_level" required>
+                    <option value="1">1 - Very Low</option>
+                    <option value="2">2 - Low</option>
+                    <option value="3">3 - Medium</option>
+                    <option value="4">4 - High</option>
+                    <option value="5">5 - Very High</option>
+                </select>
+            </div>
+
+            <div class="form-group small-width">
+                <label for="critical_thinking_goal">Critical Thinking Goal (1-5):</label>
+                <select id="critical_thinking_goal" name="critical_thinking_goal" required>
+                    <option value="1">1 - Very Low</option>
+                    <option value="2">2 - Low</option>
+                    <option value="3">3 - Medium</option>
+                    <option value="4">4 - High</option>
+                    <option value="5">5 - Very High</option>
+                </select>
+            </div>
+
+            <div class="form-group small-width">
+                <label for="creativity_goal">Creativity Goal (1-5):</label>
+                <select id="creativity_goal" name="creativity_goal" required>
+                    <option value="1">1 - Very Low</option>
+                    <option value="2">2 - Low</option>
+                    <option value="3">3 - Medium</option>
+                    <option value="4">4 - High</option>
+                    <option value="5">5 - Very High</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group full-width">
+        <button type="submit" class="btn-submit">Create Lesson Plan</button>
+    </div>
 </form>
 {% endblock %}
 

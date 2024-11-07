@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Lesson Details</h1>
+
+<div>
+    <h2>{{ lesson.title }}</h2>
+    <p><strong>Subject:</strong> {{ lesson.subject }}</p>
+    <p><strong>Year Level:</strong> {{ lesson.year_level }}</p>
+    <p><strong>Content Type:</strong> {{ lesson.content_type }}</p>
+
+    <h3>Tasks</h3>
+    <p>{{ lesson.tasks }}</p>
+
+    <h3>Goals</h3>
+    <p><strong>Critical Thinking Goal:</strong> {{ lesson.critical_thinking_goal }}</p>
+    <p><strong>Creativity Goal:</strong> {{ lesson.creativity_goal }}</p>
+    <p><strong>Complexity Level:</strong> {{ lesson.complexity_level }}</p>
+    <p><strong>Engagement Level:</strong> {{ lesson.engagement_level }}</p>
+
+    <h3>Engagement Activity</h3>
+    <p>{{ lesson.engagement_activity }}</p>
+
+    <h3>Reflection</h3>
+    <p>{{ lesson.reflection }}</p>
+</div>
+
+<a href="{{ url_for('main.teacher_dashboard') }}" class="btn">Back to Dashboard</a>
+<a href="{{ url_for('main.view_teacher_lessons') }}" class="btn">View My Created Lessons</a>
+
+{% endblock %}
+

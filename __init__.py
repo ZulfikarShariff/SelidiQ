@@ -1,35 +1,36 @@
+# selidiq/__init__.py
+
 import os
 from dotenv import load_dotenv
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
-# Load environment variables from .env file
+# Load environment variables
 load_dotenv()
 
-# Initialize SQLAlchemy and Flask-Migrate (but do not bind to an app yet)
+# Initialize extensions
 db = SQLAlchemy()
 migrate = Migrate()
 
 def create_app():
-    # Create a Flask application instance
     app = Flask(__name__)
 
-    # Set up the database configuration from environment variables
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'postgresql://default')
+    # Configure the app using environment variables
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
-    # Initialize SQLAlchemy and Flask-Migrate with the app instance
+    # Initialize extensions
     db.init_app(app)
     migrate.init_app(app, db)
 
-    # Import models to ensure they are registered with the app
-    from selidiq.models import Student, Subject, Teacher, Class, StudentProgress, Lesson
+    # Import and register the Blueprint
+    from .routes import main
+    app.register_blueprint(main)
 
-    # Any additional configuration can go here, like registering blueprints or routes
+    # Ensure models are imported for Alembic migrations
+    from .models import Student, Subject, Teacher, Class, StudentProgress, Lesson
 
     return app
-
-# Import models to ensure they are registered
-from selidiq.models import Student, Subject, Teacher, Class, StudentProgress
 

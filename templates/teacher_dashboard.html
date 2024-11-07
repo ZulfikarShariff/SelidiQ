@@ -19,30 +19,24 @@
 <div class="teacher-section">
     <h2>Manage Classes</h2>
     <ul>
-        <li><a href="/view_my_classes">View My Classes</a></li>
+        <li><a href="{{ url_for('main.view_classes') }}">View All Classes</a></li>
+        <li><a href="{{ url_for('main.create_class') }}">Create New Class</a></li>
     </ul>
 </div>
 
 <div class="teacher-section">
     <h2>Manage Students</h2>
     <ul>
-        <li><a href="/view_students">View All Students</a></li>
-        <li><a href="/student_progress">Monitor Student Progress</a></li>
+        <li><a href="{{ url_for('main.view_students') }}">View All Students</a></li>
+        <li><a href="{{ url_for('main.create_student') }}">Add New Student</a></li>
     </ul>
 </div>
 
 <div class="teacher-section">
     <h2>Lesson Plans & Resources</h2>
     <ul>
-        <!-- Create and View Teacher-Specific Lesson Plans -->
-        <li><a href="{{ url_for('create_lesson_plan') }}">Create a New Lesson Plan for My Class</a></li>
-        <li><a href="{{ url_for('view_teacher_lessons') }}">View My Created Lesson Plans</a></li>
-
-        <!-- AI-Generated Lesson Plans -->
-        <li><a href="{{ url_for('ai_lesson_generator') }}">Generate Lesson Plans with AI</a></li>
-
-        <!-- View Domain-Level Lessons Assigned -->
-        <li><a href="{{ url_for('view_domain_lessons') }}">View Domain-Level Lessons</a></li>
+        <li><a href="{{ url_for('main.create_lesson_plan') }}">Create a New Lesson Plan</a></li>
+        <li><a href="{{ url_for('main.view_teacher_lessons') }}">View My Lesson Plans</a></li>
     </ul>
 </div>
 

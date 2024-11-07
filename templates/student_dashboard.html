@@ -1,3 +1,5 @@
+<!-- selidiq/templates/student_dashboard.html -->
+
 {% extends 'base.html' %}
 
 {% block content %}
@@ -6,8 +8,7 @@
     <!-- Student Information Summary -->
     <div class="student-info">
         <img src="{{ url_for('static', filename='images/student_profile.png') }}" alt="Student Profile Picture" class="student-profile">
-        <h2>{{ student.first_name }} {{ student.middle_name if student.middle_name }} {{ student.last_name }}
-</h2>
+        <h2>{{ student.first_name }} {% if student.middle_name %}{{ student.middle_name }} {% endif %}{{ student.last_name }}</h2>
         <p>Grade: {{ student.grade }}</p>
         <p>Current GPA: {{ student.gpa }}</p>
     </div>
@@ -48,64 +49,6 @@
                 <strong>{{ lesson.title }}</strong> - {{ lesson.description }}
                 <a href="{{ lesson.link }}" class="btn">Access Lesson</a>
             </li>
-            {% endfor %}
-        </ul>
-    </div>
-
-    <!-- Assignments and Tasks -->
-    <div class="assignments">
-        <h3>Upcoming Assignments</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Assignment</th>
-                    <th>Due Date</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for assignment in student.assignments %}
-                <tr>
-                    <td>{{ assignment.title }}</td>
-                    <td>{{ assignment.due_date }}</td>
-                    <td>{{ assignment.status }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-
-    <!-- Progress and Reports -->
-    <div class="progress-reports">
-        <h3>Progress Reports</h3>
-        <p>Learning Style: {{ student.learning_style }}</p>
-        <p>Feedback: {{ student.personalized_feedback }}</p>
-        <a href="/progress_report/{{ student.id }}" class="btn">View Full Report</a>
-    </div>
-
-    <!-- Study Planner -->
-    <div class="study-planner">
-        <h3>Study Planner</h3>
-        <p>Plan your week:</p>
-        <div id="study-calendar"></div>
-    </div>
-
-    <!-- Rewards and Achievements -->
-    <div class="rewards">
-        <h3>Achievements</h3>
-        <ul>
-            {% for badge in student.badges %}
-            <li>{{ badge.name }} - {{ badge.description }}</li>
-            {% endfor %}
-        </ul>
-    </div>
-
-    <!-- Notifications and Alerts -->
-    <div class="notifications">
-        <h3>Notifications</h3>
-        <ul>
-            {% for notification in student.notifications %}
-            <li>{{ notification.message }}</li>
             {% endfor %}
         </ul>
     </div>
