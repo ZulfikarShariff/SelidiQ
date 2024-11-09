@@ -1,0 +1,38 @@
+<!-- selidiq/templates/view_timetable.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>View Timetables</h1>
+
+{% if timetables %}
+    <table>
+        <thead>
+            <tr>
+                <th>Class</th>
+                <th>Day</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Subject</th>
+                <th>Teacher</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for timetable in timetables %}
+            <tr>
+                <td>{{ timetable.class_name }}</td>
+                <td>{{ timetable.day_of_week }}</td>
+                <td>{{ timetable.period_start }}</td>
+                <td>{{ timetable.period_end }}</td>
+                <td>{{ timetable.subject_name }}</td>
+                <td>{{ timetable.teacher_name }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No timetables available.</p>
+{% endif %}
+
+{% endblock %}
+

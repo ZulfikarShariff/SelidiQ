@@ -4,19 +4,23 @@
 {% block content %}
 <h1>My Created Lesson Plans</h1>
 
-<!-- Flash Messages -->
-{% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        <div class="flash-messages">
-            {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        </div>
-    {% endif %}
-{% endwith %}
+<!-- Student Interests -->
+{% if student and student.interests %}
+    <p><strong>Your Interests:</strong> {{ student.interests | join(', ') }}</p>
+{% else %}
+    <p><strong>Showing all lessons.</strong></p>
+{% endif %}
 
+<!-- Sorting Links -->
+<div class="sort-options">
+    <label>Sort by:</label>
+    <a href="{{ url_for('main.view_teacher_lessons', sort_by='year_level') }}" class="{% if sort_by == 'year_level' %}active{% endif %}">Year Level</a> |
+    <a href="{{ url_for('main.view_teacher_lessons', sort_by='subject') }}" class="{% if sort_by == 'subject' %}active{% endif %}">Subject</a> |
+    <a href="{{ url_for('main.view_teacher_lessons', sort_by='complexity_level') }}" class="{% if sort_by == 'complexity_level' %}active{% endif %}">Complexity Level</a> |
+    <a href="{{ url_for('main.view_teacher_lessons', sort_by='interest', student_id=student.id if student else '') }}" class="{% if sort_by == 'interest' %}active{% endif %}">Aligned Student Interest</a>
+</div>
+
+<!-- Lessons Table -->
 <div class="lessons-section">
     {% if lessons %}
         <table class="table table-bordered">
@@ -26,6 +30,7 @@
                     <th>Subject</th>
                     <th>Year Level</th>
                     <th>Complexity Level</th>
+                    <th>Images</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -33,9 +38,22 @@
                 {% for lesson in lessons %}
                     <tr>
                         <td>{{ lesson.title }}</td>
-                        <td>{{ lesson.subject }}</td>
+                        <td>
+                            {{ lesson.subject }}
+                            {% if student and lesson.subject in student.interests %}
+                                <span class="badge bg-success">Aligned Student Interest</span>
+                            {% endif %}
+                        </td>
                         <td>{{ lesson.year_level }}</td>
                         <td>{{ lesson.complexity_level }}</td>
+                        <td>
+                            {% if lesson.explicit_teaching_image %}
+                                <img src="{{ url_for('static', filename='uploads/' + lesson.explicit_teaching_image) }}" alt="Explicit Teaching Image" width="50">
+                            {% endif %}
+                            {% if lesson.content_image %}
+                                <img src="{{ url_for('static', filename='uploads/' + lesson.content_image) }}" alt="Content Image" width="50">
+                            {% endif %}
+                        </td>
                         <td>
                             <a href="{{ url_for('main.view_lesson', lesson_id=lesson.id) }}" class="btn btn-info">View</a>
                             <a href="{{ url_for('main.edit_lesson', lesson_id=lesson.id) }}" class="btn btn-warning">Edit</a>

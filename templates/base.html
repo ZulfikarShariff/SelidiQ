@@ -10,7 +10,10 @@
 
 <body>
     <header>
-        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="SelidiQ Logo" class="logo">
+        <!-- Wrap the logo image in an <a> tag to make it clickable -->
+        <a href="{{ url_for('main.index') }}">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="SelidiQ Logo" class="logo">
+        </a>
         <h1>SelidiQ</h1>
     </header>
 
@@ -21,4 +24,3 @@
 </body>
 
 </html>
-
